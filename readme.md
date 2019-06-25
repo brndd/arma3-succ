@@ -1,4 +1,4 @@
-# SUCC -- Shitty Unit Cross-group Communication
+# SUCC -- Shitty Unelegant Cross-group Communication
 
 ## What is this?
 
