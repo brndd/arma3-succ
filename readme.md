@@ -1,6 +1,10 @@
 # SUCC -- Shitty Unit Cross-group Communication
 
-Usage:
+## What is this?
+
+This is a stupid simple AI script for Arma 3 that makes the AI call for backup from nearby squads when engaged in combat. I wrote it years ago and decided that I should put it here before I lose it forever.
+
+## Usage
 
 1. Drop this poc in your mission folder
 2. Edit initSucc.sqf to your tastes (the few things you should change are at the top)
