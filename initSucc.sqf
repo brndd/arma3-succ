@@ -1,20 +1,25 @@
 //SUCC -- Shitty Unelegant Cross-group Communications
-//v. 0
+//v. 1
 
 if (!isServer) exitWith{};
 SUCC_init = false;
 
 //Customize settings below this line
 //-------------------
-SUCC_autoInitSides = [independent]; //if a side is in this list, automatically start the script for all its groups
+SUCC_autoInitSides = [west]; //if a side is in this list, automatically start the script for all its groups
+
+//Whether to use waypoint mode (0) or knowledge mode (1)
+SUCC_mode = 1;
+//the max knowsAbout value to be set in knowledge mode
+SUCC_maxKnowledge = 3;
 
 //define faction relations
 SUCC_westEnemies = [opfor, independent];
 SUCC_eastEnemies = [blufor, independent];
 SUCC_independentEnemies = [blufor, opfor];
 
-SUCC_helpDistance = 600; //distance in metres that groups will help from
-SUCC_maxHelpers = 3; //the maximum amount of groups we want to be able to answer a single call
+SUCC_helpDistance = 800; //distance in metres that groups will help from
+SUCC_maxHelpers = 2; //the maximum amount of groups we want to be able to answer a single call
 //------------------
 //only edit below this line if you're brave
 
@@ -126,7 +131,7 @@ SUCC_findHelpRequest = {
 				_urgency = (_x select 1) / 100;
 				_helpCount = SUCC_maxHelpers - (_x select 4);
 				if (_helpCount < 0) then { _helpCount = 0 };
-				_modifiedDistance = (SUCC_helpDistance * _urgency) * (_helpCount / SUCC_maxHelpers);
+				_modifiedDistance = SUCC_helpDistance * _urgency * (_helpCount / SUCC_maxHelpers);
 				
 				if (_dist <= _modifiedDistance) then {
 					if (isNil "_closestDist") then {

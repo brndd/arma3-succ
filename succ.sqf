@@ -162,30 +162,48 @@ while {_loop} do {
 			_helpers = (_helpingRequest select 4) + 1;
 			_helpingRequest set [4, _helpers];
 			
-			//save our original pos to return there later
-			_returnPos = getposasl leader _group;
-			
-			//drop everything we're doing and run to the enemy
-			while {(count waypoints _group) > 0} do {
-				deleteWaypoint (waypoints _group select 0);
-			};
-			_pos = _helpingRequest select 2;
-			_wp = _group addWaypoint [_pos, 25];
-			_wp setWaypointType "SAD";
-			_wp setWaypointFormation "WEDGE";
-			_wp setWaypointSpeed "NORMAL";
-			_wp setWaypointBehaviour "AWARE";
-			_wp setWaypointCombatMode "YELLOW";
-			_members doWatch _pos;
-			_wp setWaypointStatements ["true", "thisList doWatch objNull"];
-			
-			//add a waypoint to go back to our original waypoint after the SAD is done
-			_wp = _group addWaypoint [_returnPos, 0];
-			_wp setWaypointType "MOVE";
-			_wp setWaypointFormation "STAG COLUMN";
-			_wp setWaypointSpeed "LIMITED";
-			_wp setWaypointBehaviour "SAFE";
-			_wp setWaypointCombatMode "YELLOW";
+            switch (SUCC_mode) do {
+                //waypoint mode
+                case (0): {
+                    //save our original pos to return there later
+                    _returnPos = getposasl leader _group;
+                    
+                    //drop everything we're doing and run to the enemy
+                    while {(count waypoints _group) > 0} do {
+                        deleteWaypoint (waypoints _group select 0);
+                    };
+                    _pos = _helpingRequest select 2;
+                    _wp = _group addWaypoint [_pos, 25];
+                    _wp setWaypointType "SAD";
+                    _wp setWaypointFormation "WEDGE";
+                    _wp setWaypointSpeed "NORMAL";
+                    _wp setWaypointBehaviour "AWARE";
+                    _wp setWaypointCombatMode "YELLOW";
+                    _members doWatch _pos;
+                    _wp setWaypointStatements ["true", "thisList doWatch objNull"];
+                    
+                    //add a waypoint to go back to our original waypoint after the SAD is done
+                    _wp = _group addWaypoint [_returnPos, 0];
+                    _wp setWaypointType "MOVE";
+                    _wp setWaypointFormation "STAG COLUMN";
+                    _wp setWaypointSpeed "LIMITED";
+                    _wp setWaypointBehaviour "SAFE";
+                    _wp setWaypointCombatMode "YELLOW";
+                };
+                //knowledge mode
+                case (1): {
+                    _otherGroup = _helpingrequest select 0;
+                    _targets = leader _otherGroup targetsQuery [objNull, sideUnknown, "", [], 0];
+                    _enemies = [side _otherGroup] call SUCC_getEnemies;
+                    {
+                        if ((_x select 0 == 1) and (_x select 2 in _enemies)) then {
+                            _target = _x select 1;
+                            _acc = (_otherGroup knowsAbout _target) max SUCC_maxKnowledge;
+                            _group reveal [_target, _acc];
+                        };
+                    } forEach _targets;
+                };
+            };
 		};
 	};
 	
